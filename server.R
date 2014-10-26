@@ -7,14 +7,13 @@ library(rpart.plot)
 library(rpart)
 library(e1071)
 
+# Data used for the Decision Tree model 
 MyIris <-iris
 
-# Define server logic for random distribution application
+# Define server logic for Decision Tree prediction application
 shinyServer(function(input, output) {
- # Reactive expression to generate the requested distribution. This is 
-  # called whenever the inputs change. The renderers defined 
-  # below then all use the value computed from this expression
- sliderValues <- reactive({
+  # Reactive expression to generate the predicted iris species. 
+  sliderValues <- reactive({
     # Compose data frame
     data.frame(
       Measurments = c("Sepal Length", 
@@ -32,7 +31,7 @@ shinyServer(function(input, output) {
   output$values <- renderTable({
     sliderValues()
   })
-
+  # Create the New Data for the prediction function from the slider input 
   SpeciesSelection <- reactive({      
 	Newdata <- data.frame(Sepal.Length = input$Sepal.Length,
 						  Sepal.Width = input$Sepal.Width,
@@ -41,10 +40,7 @@ shinyServer(function(input, output) {
   })
   
   
-  # Generate a plot of the data. Also uses the inputs to build the 
-  # plot label. Note that the dependencies on both the inputs and
-  # the 'data' reactive expression are both tracked, and all expressions 
-  # are called in the sequence implied by the dependency graph
+  # Generate a plot of the data. 
   output$plot <- renderPlot({
 	modelFit <-train(Species~.,method="rpart", data=MyIris)
 	newPred <- predict(modelFit,SpeciesSelection())
@@ -64,7 +60,7 @@ shinyServer(function(input, output) {
 	newPred <- predict(modelFit,SpeciesSelection())
 	summary(droplevels(iris[iris$Species == newPred,]))
   })
-
+  # Generate the prediction text caption
   formulaText <- reactive({
 	modelFit <-train(Species~.,method="rpart", data=MyIris)
 	newPred <- predict(modelFit,SpeciesSelection())
@@ -76,6 +72,7 @@ shinyServer(function(input, output) {
     formulaText()
   })
   
+  # Generate a plot of the data. 
   output$tree <- renderPlot({
 	modelFit <-train(Species~.,method="rpart", data=MyIris)
 	newPred <- predict(modelFit,SpeciesSelection())

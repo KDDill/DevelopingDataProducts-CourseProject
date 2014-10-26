@@ -6,12 +6,11 @@ shinyUI(pageWithSidebar(
   # Application title
   headerPanel("Classify the Iris Species"),
 
-  # Sidebar with controls to select the random distribution type
-  # and number of observations to generate. Note the use of the br()
-  # element to introduce extra vertical spacing
+  # Sidebar with controls to select the flower measurement
  
-  # Sidebar with sliders that demonstrate various available options
+  # Sidebar with sliders
   sidebarPanel(
+    # help text 
 	helpText('Use the sliders below to select new flower measurements.'),
 
     # Sepal Length slider
@@ -31,16 +30,21 @@ shinyUI(pageWithSidebar(
                 min = 0, max = 2.5, value = 1, step = 0.25),
 
 	br(), 
+	# help text 
 	helpText("Press the 'Update Measurements' button to submit the new flower measurements."),
+	
 	submitButton("Update Measurements"),
+	
 	br(),
+	
+	# help text 
 	helpText("Use the tabs to view: the flower input values and species classification, iris species classification tree, boxplots by iris species, and summary table of the classified iris species")
   ),
-  # Show a tabset that includes a plot, summary, and table view
-  # of the generated distribution
+  
+  # Show a tabset that includes input values and prediction, classification tree, boxplot, and summary
+  
   mainPanel(
     tabsetPanel(
-		# Show a table summarizing the values entered
 		tabPanel("Input Values", h3(textOutput("caption")), br(),tableOutput("values")),
 		tabPanel("Classification Tree", plotOutput("tree")),
 		tabPanel("BoxPlot", plotOutput("plot")), 
