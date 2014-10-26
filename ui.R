@@ -4,7 +4,7 @@ library(shiny)
 shinyUI(pageWithSidebar(
 
   # Application title
-  headerPanel("Classify the Iris Species"),
+  headerPanel("Iris Species Classification App"),
 
   # Sidebar with controls to select the flower measurement
  
