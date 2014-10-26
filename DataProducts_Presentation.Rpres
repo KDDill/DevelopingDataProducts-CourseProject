@@ -1,0 +1,75 @@
+Shiny App Pitch: Classifying Iris Species
+========================================================
+author: 
+date: 2014-Oct-26
+
+
+Description of Shiny App    
+========================================================
+This app classifies different iris species by using the measurements (width/length) of the flower petal and sepal leaves.
+
+This app has four tabs that show:
+- Input values from the sliders and the predicted iris species
+
+- A classification tree.
+
+- Boxplots of the flower measurements categorized by iris species.
+
+- A summary of the flower measurement of the classified iris species.
+
+First
+========================================================
+transition: rotate
+
+The Flower measurements are collected from the shiny app sliders and stored in 'Newdata'.  
+```{r, echo=FALSE, results='hide'}
+library(xtable)
+library(rpart)
+library(rpart.plot)
+library(datasets)
+library(caret)
+library(reshape)
+library(ggplot2)
+```
+
+```{r, echo=TRUE, results='asis'}
+# NewData is used for the predict function
+Newdata <- data.frame(Sepal.Length = 6, 
+                      Sepal.Width = 4.5, 
+                      Petal.Length = 7, 
+                      Petal.Width = 1.7)
+print(xtable(Newdata), type="html")
+```
+
+Then
+========================================================
+A decision tree model is created to classify the iris species. 
+
+```{r, echo=TRUE}
+MyIris <- iris
+modelFit <-train(Species~., 
+                 method="rpart", data=MyIris)
+trees <- modelFit$finalModel
+
+newPred <- predict(modelFit,Newdata)
+```
+
+Based on these measurements, this is a Iris **`r newPred`** flower.
+
+Finally
+========================================================
+transition: fade
+The output prediction is visualized!
+Below is a example the decision tree plot in the shiny app.
+
+```{r, echo=FALSE, fig.height=6, fig.width=6, fig.align='center'}
+
+complexity <- ifelse(newPred=="setosa", 1, 
+              ifelse(newPred=="versicolor", 2, 3))
+cols <- ifelse(trees$frame$yval == complexity,
+               "purple", "darkgray")
+prp(trees, type = 1, extra = 0, col=cols, 
+      branch.col=cols, varlen=0, split.col=cols)
+```
+
+To try this awesome shiny app [click here](http://kddill.shinyapps.io/shinyapp)!!!!
